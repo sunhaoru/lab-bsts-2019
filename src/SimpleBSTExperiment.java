@@ -23,6 +23,11 @@ public class SimpleBSTExperiment {
     example.dump(pen);
     pen.println();
 
+    pen.println("Getting values");
+    getExperiment(pen, example, phase1);
+    example.dump(pen); // Does the tree change?
+    pen.println();
+
     pen.println("Starting phase 2");
     addStrings(example, phase2);
     example.dump(pen);
@@ -47,6 +52,23 @@ public class SimpleBSTExperiment {
       example.set(key(str), str);
     } // for
   } // add
+
+  /**
+   * Some experiments with getting values
+   */
+  static void getExperiment(PrintWriter pen, SimpleBST<String, String> example,
+      String[] strings) {
+    for (String str : strings) {
+      String key = key(str);
+      pen.print(key + ": ");
+      pen.flush();
+      try {
+        pen.println(example.get(key));
+      } catch (Exception e) {
+        pen.println(e);
+      }
+    }
+  } // getExperiment
 
   /**
    * Generate a key from a string.

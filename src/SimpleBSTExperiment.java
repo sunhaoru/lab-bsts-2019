@@ -27,6 +27,9 @@ public class SimpleBSTExperiment {
     getExperiment(pen, example, phase1);
     example.dump(pen); // Does the tree change?
     pen.println();
+    
+    pen.println("Checking forEach");
+    example.forEach((key,value) -> pen.println(key + ": " + value));
 
     pen.println("Starting phase 2");
     addStrings(example, phase2);

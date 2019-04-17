@@ -18,7 +18,7 @@ public interface SimpleMap<K,V> {
   /**
    * Get the value associated with key.
    * 
-   * @throws IllegalStateException if the key is not in the map.
+   * @throws IndexOutOfBoundsException if the key is not in the map.
    * @throws NullPointerException if the key is null.
    */
   public V get(K key);

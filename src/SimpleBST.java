@@ -215,7 +215,7 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
       void checkInit() {
         if (!initialized) {
           stack.push(SimpleBST.this.root);
-          initialized = false;
+          initialized = true;
         } // if
       } // checkInit
     }; // new Iterator

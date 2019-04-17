@@ -27,6 +27,11 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
    * The size of the tree.
    */
   int size;
+  
+  /**
+   * A cached value (useful in some circumstances.
+   */
+  V cachedValue;
 
   // +--------------+------------------------------------------------
   // | Constructors |
@@ -39,6 +44,7 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
     this.comparator = comparator;
     this.root = null;
     this.size = 0;
+    this.cachedValue = null;
   } // SimpleBST(Comparator<K>)
 
   /**

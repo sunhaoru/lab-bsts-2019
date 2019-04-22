@@ -61,9 +61,62 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
 
   @Override
   public V set(K key, V value) {
-    // TODO Auto-generated method stub
+    if (this.root == null) {
+      this.root = new BSTNode<K, V>(key, value);
+      this.size++;
+      return null;
+    }
+    BSTNode<K, V> current = root;
+    while (current != null) {
+      if (this.comparator.compare(current.key, key) == 0) {
+        V prev = current.value;
+        current.value = value;
+        return prev;
+      }
+      if (this.comparator.compare(key, current.key) < 0) {
+        if (current.left == null) {
+          current.left = new BSTNode<K, V>(key, value);
+          this.size++;
+          return null;
+        } else {
+          current = current.left;
+        }
+      } else {
+        if (current.right == null) {
+          current.right = new BSTNode<K, V>(key, value);
+          this.size++;
+          return null;
+        } else {
+          current = current.right;
+        }
+      }
+    }
     return null;
   } // set(K,V)
+
+  public V setRec(K key, V value) {
+    root = setHelper(root, key, value);
+    return this.cachedValue;
+  }
+
+  public BSTNode<K, V> setHelper(BSTNode<K, V> node, K key, V value) {
+    if (node == null) {
+      this.cachedValue = null;
+      this.size++;
+      return new BSTNode<K, V>(key, value);
+    } else if (this.comparator.compare(key, node.key) == 0) {
+      this.cachedValue = node.value;
+      node.value = value;
+      return node;
+    } else if (this.comparator.compare(key, node.key) < 0) {
+      node.left = setHelper(node.left, key, value);
+      return node;
+    } else {
+      node.right = setHelper(node.right, key, value);
+      return node;
+    }
+
+  }
 
   @Override
   public V get(K key) {
@@ -87,9 +140,49 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
 
   @Override
   public V remove(K key) {
-    // TODO Auto-generated method stub
-    return null;
+    root = removeHelper(root, key);
+    return cachedValue;
   } // remove(K)
+
+  public BSTNode<K, V> removeHelper(BSTNode<K, V> node, K key) {
+    if (node == null) {
+      cachedValue = null;
+      return null;
+    } // if
+    else {
+      if (this.comparator.compare(key, node.key) == 0) {
+        if (node.left == null && node.right == null) {
+          cachedValue = node.value;
+          return null;
+        } // if leaf
+        else if (node.left == null) {
+          cachedValue = node.value;
+          return node.right;
+        } // else if node.left is null
+        else if (node.right == null) {
+          cachedValue = node.value;
+          return node.left;
+        } // else if node.right is null
+        else {
+          cachedValue = node.value;
+          BSTNode<K, V> current = node.left;
+          while (current.right != null) {
+            current = current.right;
+          }
+          current.right = node.right;
+          return node.left;
+        } // else if complicated
+      } // if
+      else if (this.comparator.compare(key, node.key) < 0) {
+        node.left = removeHelper(node.left, key);
+        return node;
+      } // if less
+      else {
+        node.right = removeHelper(node.right, key);
+        return node;
+      } // if greater
+    }
+  }
 
   @Override
   public Iterator<K> keys() {
@@ -144,10 +237,10 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
     if (node == null) {
       return;
     } // if
-    action.accept(node.key, node.value);
     forEach(action, node.left);
+    action.accept(node.key, node.value);
     forEach(action, node.right);
-  } // forEach
+  }
 
   // +----------------------+----------------------------------------
   // | Other public methods |
@@ -164,6 +257,7 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
   // +---------+-----------------------------------------------------
   // | Helpers |
   // +---------+
+
 
   /**
    * Dump a portion of the tree to some output location.
@@ -223,7 +317,7 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
       void checkInit() {
         if (!initialized) {
           stack.push(SimpleBST.this.root);
-          initialized = true;
+          initialized = false;
         } // if
       } // checkInit
     }; // new Iterator

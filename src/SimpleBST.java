@@ -27,7 +27,7 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
    * The size of the tree.
    */
   int size;
-  
+
   /**
    * A cached value (useful in some circumstances.
    */
@@ -137,8 +137,16 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
 
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
-    // TODO Auto-generated method stub
+    forEach(action, root);
+  } // forEach
 
+  void forEach(BiConsumer<? super K, ? super V> action, BSTNode<K, V> node) {
+    if (node == null) {
+      return;
+    } // if
+    action.accept(node.key, node.value);
+    forEach(action, node.left);
+    forEach(action, node.right);
   } // forEach
 
   // +----------------------+----------------------------------------
@@ -171,12 +179,12 @@ public class SimpleBST<K, V> implements SimpleMap<K, V> {
       } // if has children
     } // else
   } // dump
-  
+
   /**
-   * Get the value associated with a key in a subtree rooted at node.  See the
-   * top-level get for more details.
+   * Get the value associated with a key in a subtree rooted at node. See the top-level get for more
+   * details.
    */
-  V get(K key, BSTNode<K,V> node) {
+  V get(K key, BSTNode<K, V> node) {
     if (node == null) {
       throw new IndexOutOfBoundsException("Invalid key: " + key);
     }
